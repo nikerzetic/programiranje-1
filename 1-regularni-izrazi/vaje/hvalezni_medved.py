@@ -1,3 +1,5 @@
+import re
+
 ###############################################################################
 # Hvaležni medved
 #
@@ -27,6 +29,9 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 ###############################################################################
 
 
+def find_words(besedilo, vzorec):
+    return {x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\w*?\b', besedilo)}
+
 ###############################################################################
 # 2) Sestavite funkcijo [find_prefix], ki vrne množico vseh besed, ki se
 #    pojavijo v nizu in imajo dano predpono.
@@ -35,6 +40,9 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # {'zibala', 'zibel', 'zibelko'}
 ###############################################################################
 
+
+def find_prefix(besedilo, vzorec):
+    return {x.group(0) for x in re.finditer(r'\b' + vzorec + r'\w*?\b', besedilo)}
 
 ###############################################################################
 # 3) Sestavite funkcijo [find_suffix], ki vrne množico vseh besed, ki se
@@ -45,6 +53,9 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 ###############################################################################
 
 
+def find_suffix(besedilo, vzorec):
+    return {x.group(0) for x in re.finditer(r'\b\w*?' + vzorec +r'\b', besedilo)}
+
 ###############################################################################
 # 4) Sestavite funkcijo [double_letters], ki sprejme niz in vrne množico vseh
 #    besed, ki vsebujejo podvojene črke.
@@ -52,3 +63,12 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> double_letters('A volunteer is worth twenty pressed men.')
 # {'volunteer', 'pressed'}
 ###############################################################################
+
+
+def double_letters(besedilo):
+    return {x.group(0) for x in re.finditer(r'(.)\1', besedilo)}
+
+print(find_words(test_text, 'de'))
+print(find_prefix(test_text, 'zi'))
+print(find_suffix(test_text, 'la'))
+print(double_letters('A volunteer is worth twenty pressed men.'))
