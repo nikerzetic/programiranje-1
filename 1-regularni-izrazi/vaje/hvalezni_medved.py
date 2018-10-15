@@ -30,7 +30,9 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 
 
 def find_words(besedilo, vzorec):
-    return {x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\w*?\b', besedilo)}
+    return {
+    x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\w*?\b', besedilo)
+    }
 
 ###############################################################################
 # 2) Sestavite funkcijo [find_prefix], ki vrne množico vseh besed, ki se
@@ -42,7 +44,9 @@ def find_words(besedilo, vzorec):
 
 
 def find_prefix(besedilo, vzorec):
-    return {x.group(0) for x in re.finditer(r'\b' + vzorec + r'\w*?\b', besedilo)}
+    return {
+        x.group(0) for x in re.finditer(r'\b' + vzorec + r'\w*?\b', besedilo)
+        } 
 
 ###############################################################################
 # 3) Sestavite funkcijo [find_suffix], ki vrne množico vseh besed, ki se
@@ -54,7 +58,9 @@ def find_prefix(besedilo, vzorec):
 
 
 def find_suffix(besedilo, vzorec):
-    return {x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\b', besedilo)}
+    return {
+        x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\b', besedilo)
+        }
 
 ###############################################################################
 # 4) Sestavite funkcijo [double_letters], ki sprejme niz in vrne množico vseh
