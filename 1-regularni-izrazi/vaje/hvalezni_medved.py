@@ -31,8 +31,9 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 
 def find_words(besedilo, vzorec):
     return {
-    x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\w*?\b', besedilo)
-    }
+        x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\w*?\b',
+                                        besedilo)
+        }
 
 ###############################################################################
 # 2) Sestavite funkcijo [find_prefix], ki vrne množico vseh besed, ki se
