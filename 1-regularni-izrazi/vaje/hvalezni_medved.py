@@ -66,7 +66,7 @@ def find_suffix(besedilo, vzorec):
 
 
 def double_letters(besedilo):
-    return {x.group(0) for x in re.finditer(r'(.)\1', besedilo)}
+    return {x.group(0) for x in re.finditer(r'\w*(.)\1\w+', besedilo)}
 
 print(find_words(test_text, 'de'))
 print(find_prefix(test_text, 'zi'))
