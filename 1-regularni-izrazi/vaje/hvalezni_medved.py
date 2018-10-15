@@ -54,7 +54,7 @@ def find_prefix(besedilo, vzorec):
 
 
 def find_suffix(besedilo, vzorec):
-    return {x.group(0) for x in re.finditer(r'\b\w*?' + vzorec +r'\b', besedilo)}
+    return {x.group(0) for x in re.finditer(r'\b\w*?' + vzorec + r'\b', besedilo)}
 
 ###############################################################################
 # 4) Sestavite funkcijo [double_letters], ki sprejme niz in vrne množico vseh
