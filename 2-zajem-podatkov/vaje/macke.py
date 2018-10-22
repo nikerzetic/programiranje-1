@@ -84,8 +84,15 @@ def get_dict_from_ad_block(ad):
     of an ad block.'''
     ad_name = re.compile(r'<h3><a title="(.*?)" href=')
     ad_description = re.compile(r'</a></h3>\s+(.*?)\s+?</?div>', re.DOTALL)
-    ad_price = re.compile(r'<div class="price">(<span>)?(?P<cena>.*?)(</span>)?</div>')
-    return {'name': re.search(ad_name, ad).group(1), 'description': re.search(ad_description, ad).group(1), 'price': re.search(ad_price, ad).groupdict()['cena']}
+    ad_price = re.compile(
+                          r'<div class="price">(<span>)?(?P<cena>.*?)' 
+                          r'(</span>)?</div>'
+        )
+    return {
+        'name': re.search(ad_name, ad).group(1), 
+        'description': re.search(ad_description, ad).group(1), 
+        'price': re.search(ad_price, ad).groupdict()['cena']
+        }
 
 # Definirajte funkcijo, ki sprejme ime in lokacijo datoteke, ki vsebuje
 # besedilo spletne strani, in vrne seznam slovarjev, ki vsebujejo podatke o
@@ -94,7 +101,9 @@ def get_dict_from_ad_block(ad):
 
 def ads_from_file(directory, filename):
     '''Parse the ads in filename/directory into a dictionary list.'''
-    return [get_dict_from_ad_block(ad) for ad in page_to_ads(read_file_to_string(directory, filename))]
+    return [
+        get_dict_from_ad_block(ad) for ad in page_to_ads(read_file_to_string(directory, filename))
+        ]
 
 ###############################################################################
 # Obdelane podatke želimo sedaj shraniti.
