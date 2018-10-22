@@ -83,7 +83,7 @@ def get_dict_from_ad_block(add):
     '''Build a dictionary containing the name, description and price
     of an ad block.'''
     regex = r'<h3><a title="(.+?)"'
-    ad_name
+    ad_name = re.search()
     ad_description
     ad_price
     return {name: ad_name, description: ad_description, price: ad_price}
