@@ -79,23 +79,31 @@ def page_to_ads(content):
 # podatke o imenu, ceni in opisu v oglasu.
 
 
-def get_dict_from_ad_block(add):
+def get_dict_from_ad_block(ad):
     '''Build a dictionary containing the name, description and price
     of an ad block.'''
-    regex = r'<h3><a title="(.+?)"'
-    ad_name
-    ad_description
-    ad_price
-    return {name: ad_name, description: ad_description, price: ad_price}
+    ad_name = re.compile(r'<h3><a title="(.*?)" href=')
+    ad_description = re.compile(r'</a></h3>\s+(.*?)\s+?</?div>', re.DOTALL)
+    ad_price = re.compile(
+                          r'<div class="price">(<span>)?(?P<cena>.*?)' 
+                          r'(</span>)?</div>'
+        )
+    return {
+        'name': re.search(ad_name, ad).group(1), 
+        'description': re.search(ad_description, ad).group(1), 
+        'price': re.search(ad_price, ad).groupdict()['cena']
+        }
 
 # Definirajte funkcijo, ki sprejme ime in lokacijo datoteke, ki vsebuje
 # besedilo spletne strani, in vrne seznam slovarjev, ki vsebujejo podatke o
 # vseh oglasih strani.
 
 
-def ads_from_file(TODO):
+def ads_from_file(directory, filename):
     '''Parse the ads in filename/directory into a dictionary list.'''
-    return TODO
+    return [
+        get_dict_from_ad_block(ad) for ad in page_to_ads(read_file_to_string(directory, filename))
+        ]
 
 ###############################################################################
 # Obdelane podatke želimo sedaj shraniti.
@@ -122,3 +130,7 @@ def write_csv(fieldnames, rows, directory, filename):
 
 def write_cat_ads_to_csv(TODO):
     return TODO
+
+l = page_to_ads(read_file_to_string(cat_directory, frontpage_filename))
+d = get_dict_from_ad_block(l[0])
+s = ads_from_file(cat_directory, frontpage_filename)
