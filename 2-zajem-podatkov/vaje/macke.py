@@ -109,7 +109,6 @@ def ads_from_file(directory, filename):
 # Obdelane podatke želimo sedaj shraniti.
 ###############################################################################
 
-# comment
 
 def write_csv(fieldnames, rows, directory, filename):
     '''Write a CSV file to directory/filename. The fieldnames must be a list of
