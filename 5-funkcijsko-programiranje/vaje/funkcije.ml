@@ -4,7 +4,12 @@
 Namig: Definirajte pomožno funkcijo za obračanje seznamov.
 [*----------------------------------------------------------------------------*)
 
-let rec reverse = ()
+let rec reverse lst = 
+  let rec reverse' acc = function
+  | [] -> acc
+  | x :: xs -> reverse' (x :: acc) xs
+  in
+  reverse' [] lst
 
 (*----------------------------------------------------------------------------*]
  Funkcija [repeat x n] vrne seznam [n] ponovitev vrednosti [x]. Za neprimerne
@@ -16,7 +21,14 @@ let rec reverse = ()
  - : string list = []
 [*----------------------------------------------------------------------------*)
 
-let rec repeat = ()
+let rec repeat x n = 
+  let rec repeat' x n acc = 
+    if n <= 0 then
+     acc
+    else
+     let new_acc = x :: acc in repeat' x (n-1) new_acc
+  in
+  repeat' x n []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [range] sprejme število in vrne seznam vseh celih števil od 0 do
@@ -27,7 +39,14 @@ let rec repeat = ()
  - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
 [*----------------------------------------------------------------------------*)
 
-let rec range = ()
+let rec range n =
+  let rec range' n acc =
+    if n < 0 then
+     acc
+    else
+     range' (n-1) (n :: acc)
+    in
+    range' n []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [map f list] sprejme seznam [list] oblike [x0; x1; x2; ...] in
@@ -39,7 +58,10 @@ let rec range = ()
  - : int list = [2; 3; 4; 5; 6]
 [*----------------------------------------------------------------------------*)
 
-let rec map = ()
+let rec map f lst =
+  match lst with 
+  | [] -> []
+  | x :: xs -> f x :: map f xs 
 
 (*----------------------------------------------------------------------------*]
  Funkcija [map_tlrec] je repno rekurzivna različica funkcije [map].
@@ -49,7 +71,12 @@ let rec map = ()
  - : int list = [2; 3; 4; 5; 6]
 [*----------------------------------------------------------------------------*)
 
-let rec map_tlrec = ()
+let rec map_tlrec f lst =
+  let rec map_tlrec' f acc = function  
+  | [] -> reverse acc
+  | x :: xs -> map_tlrec' f (f x :: acc) xs
+  in
+  map_tlrec' f [] lst
 
 (*----------------------------------------------------------------------------*]
  Funkcija [mapi] sprejme seznam in funkcijo dveh argumentov ter vrne seznam
@@ -60,7 +87,12 @@ let rec map_tlrec = ()
  - : int list = [0; 1; 2; 5; 6; 7]
 [*----------------------------------------------------------------------------*)
 
-let rec mapi = ()
+let rec mapi f lst =
+  let rec mapi' f i acc = function
+  | [] -> reverse acc
+  | x :: xs -> mapi' f (i+1) (f x i :: acc) xs
+  in
+  mapi' f 0 [] lst 
 
 (*----------------------------------------------------------------------------*]
  Funkcija [zip] sprejme dva seznama in vrne seznam parov istoležnih
@@ -72,7 +104,13 @@ let rec mapi = ()
  Exception: Failure "Different lengths of input lists.".
 [*----------------------------------------------------------------------------*)
 
-let rec zip = ()
+let rec zip lst1 lst2 = 
+  let rec zip' acc = function
+    | ([], []) -> reverse acc
+    | ([], _) | (_, []) -> failwith "Different lengths of input lists."
+    | (x :: xs, y :: ys) -> zip' ((x, y) :: acc) (xs, ys)
+    in
+    zip' [] (lst1, lst2)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [zip_enum_tlrec] sprejme seznama [x_0; x_1; ...] in [y_0; y_1; ...]
@@ -83,7 +121,13 @@ let rec zip = ()
  - : (int * string * int) list = [(0, "a", 7); (1, "b", 3); (2, "c", 4)]
 [*----------------------------------------------------------------------------*)
 
-let rec zip_enum_tlrec = ()
+let rec zip_enum_tlrec lst1 lst2 =
+  let rec zip_enum_tlrec' i acc = function
+    | ([], []) -> reverse acc
+    | ([], _) | (_, []) -> failwith "Different lengths of input lists."
+    | (x :: xs, y :: ys) -> zip_enum_tlrec' (i+1) ((i, x, y) :: acc) (xs, ys)
+    in
+    zip_enum_tlrec' 0 [] (lst1, lst2)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [unzip] je inverz funkcije [zip], torej sprejme seznam parov
@@ -93,7 +137,12 @@ let rec zip_enum_tlrec = ()
  - : int list * string list = ([0; 1; 2], ["a"; "b"; "c"])
 [*----------------------------------------------------------------------------*)
 
-let rec unzip = ()
+let rec unzip lst = 
+  let rec unzip' acc1 acc2 = function
+  | [] -> (reverse acc1, reverse acc2)
+  | (x, y) :: l -> unzip' (x :: acc1) (y :: acc2) l
+  in
+  unzip' [] [] lst
 
 (*----------------------------------------------------------------------------*]
  Funkcija [unzip_tlrec] je repno rekurzivna različica funkcije [unzip].
@@ -102,7 +151,8 @@ let rec unzip = ()
  - : int list * string list = ([0; 1; 2], ["a"; "b"; "c"])
 [*----------------------------------------------------------------------------*)
 
-let rec unzip_tlrec = ()
+let rec unzip_tlrec lst = 
+  unzip lst
 
 (*----------------------------------------------------------------------------*]
  Funkcija [fold_left_no_acc f list] sprejme seznam [x0; x1; ...; xn] in
@@ -114,7 +164,10 @@ let rec unzip_tlrec = ()
  - : string = "FICUS"
 [*----------------------------------------------------------------------------*)
 
-let rec fold_left_no_acc = ()
+let rec fold_left_no_acc f = function
+  | [] | [_] -> failwith "List too short."
+  | x :: y :: [] -> f x y
+  | x :: y :: z ::  l -> fold_left_no_acc f (f x y :: z :: l)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [apply_sequence f x n] vrne seznam zaporednih uporab funkcije [f] na
@@ -128,7 +181,14 @@ let rec fold_left_no_acc = ()
  - : int list = []
 [*----------------------------------------------------------------------------*)
 
-let rec apply_sequence = ()
+let rec apply_sequence f x n = 
+  let rec apply f x n acc =
+    if n == 0 then
+      reverse (f x :: acc)
+    else
+      apply f (f x) (n-1) (x :: acc)
+  in
+  apply f x n []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [filter f list] vrne seznam elementov [list], pri katerih funkcija [f]
