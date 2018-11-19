@@ -1,7 +1,8 @@
 (* Vojne čarodejov se nadaljujejo. *)
 
 (* Čarodeji, ki se borijo v vojnah so pripadniki teh treh ras.  *)
-type race = Orc | Hobbit | Human
+
+type race = Orc | Hobbit | Human | Elf
 
 
 (* Uroki [spells] prihajajo iz treh šol [school] magije: firewall in blaze sta ognjena uroka [Fire],
