@@ -209,7 +209,7 @@ let rec update counter magic =
   match magic with 
   | Fire -> {fire = counter.fire + 1; frost = counter.frost; arcane = counter.arcane}
   | Frost -> {fire = counter.fire; frost = counter.frost + 1; arcane = counter.arcane}
-  | Arcane -> {fire = counter.fire; frost = counter.frost; arcane = counter.arcane + 1}
+  | Arcane -> {counter with arcane = counter.arcane + 1}
 
 let initial_counter = {fire = 0; frost = 0; arcane = 0}
 (*----------------------------------------------------------------------------*]
