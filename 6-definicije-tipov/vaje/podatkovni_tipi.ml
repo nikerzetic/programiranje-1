@@ -190,7 +190,7 @@ type status =
 
 type wizard = {name: string; status: status}
 
-let profesor = {name = "Matija"; status = Employed (Fire, Teacher)}
+let professor = {name = "Matija"; status = Employed (Fire, Teacher)}
 
 (*----------------------------------------------------------------------------*]
  Želimo prešteti koliko uporabnikov posamezne od vrst magije imamo na akademiji.
@@ -207,20 +207,31 @@ type magic_counter = {fire: int; frost: int; arcane: int}
 
 let rec update counter magic =
   match magic with 
-  | Fire -> {fire = counter.fire + 1; frost = counter.frost; arcane = counter.arcane}
-  | Frost -> {fire = counter.fire; frost = counter.frost + 1; arcane = counter.arcane}
+  | Fire -> {counter with fire = counter.fire + 1}
+  | Frost -> {counter with frost = counter.frost + 1}
   | Arcane -> {counter with arcane = counter.arcane + 1}
 
-let initial_counter = {fire = 0; frost = 0; arcane = 0}
 (*----------------------------------------------------------------------------*]
- Funkcija [count_magic] sprejme seznam čarodejev in vrne števec uporabnikov
- različnih vrst magij.
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- # count_magic [professor; professor; professor];;
- - : magic_counter = {fire = 3; frost = 0; arcane = 0}
+Funkcija [count_magic] sprejme seznam čarodejev in vrne števec uporabnikov
+različnih vrst magij.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# count_magic [professor; professor; professor];;
+- : magic_counter = {fire = 3; frost = 0; arcane = 0}
 [*----------------------------------------------------------------------------*)
+  
+let initial_counter = {fire = 0; frost = 0; arcane = 0}
 
-let rec count_magic = ()
+let rec users_magic user =
+  match user.status with 
+  | Newbie -> failwith "No magic here"
+  | Student (magic, years) -> magic
+  | Employed (magic, specialisation) -> magic
+
+let rec count_magic users = 
+  let rec count counter = function
+    | [] -> counter
+    | x :: xs -> count (update counter (users_magic x)) xs
+  in count initial_counter users
 
 (*----------------------------------------------------------------------------*]
  Želimo poiskati primernega kandidata za delovni razpis. Študent lahko postane
@@ -236,4 +247,8 @@ let rec count_magic = ()
  - : string option = Some "Jaina"
 [*----------------------------------------------------------------------------*)
 
-let rec find_candidate = ()
+let rec find_candidate magic specialisastion wizard_list = 
+  match wizard_list with
+  | [] -> None
+  | x :: xs -> 
+    if x 
