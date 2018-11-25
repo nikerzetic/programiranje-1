@@ -247,8 +247,17 @@ let rec count_magic users =
  - : string option = Some "Jaina"
 [*----------------------------------------------------------------------------*)
 
+let specialisation_years specialisation =
+  match specialisation with 
+  | Historian -> 3
+  | Teacher -> 5
+  | Researcher -> 4
+
 let rec find_candidate magic specialisastion wizard_list = 
   match wizard_list with
   | [] -> None
   | x :: xs -> 
-    if x 
+    if x.status = Newbie || x.status = Employed(_,_) then
+      find_candidate magic specialisation xs
+    else if x.status = Student(magic, (specialisation_years specialisatoin))
+      x.name
