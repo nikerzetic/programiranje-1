@@ -221,7 +221,7 @@ različnih vrst magij.
   
 let initial_counter = {fire = 0; frost = 0; arcane = 0}
 
-let rec users_magic user =
+(* let rec users_magic user =
   match user.status with 
   | Newbie -> failwith "No magic here"
   | Student (magic, years) -> magic
@@ -231,7 +231,17 @@ let rec count_magic users =
   let rec count counter = function
     | [] -> counter
     | x :: xs -> count (update counter (users_magic x)) xs
-  in count initial_counter users
+  in count initial_counter users *)
+
+let count_magic wizard_list =
+  let rec count counter = function
+    | [] -> counter
+    | {name; status} :: wizards -> (
+        match status with
+        | Newbie -> count counter wizards
+        | Student (magic, _) -> count (update counter magic) wizards
+        | Employed (magic, _) -> count (update counter magic) wizards)
+in count initial_counter wizard_list
 
 (*----------------------------------------------------------------------------*]
  Želimo poiskati primernega kandidata za delovni razpis. Študent lahko postane
@@ -247,17 +257,18 @@ let rec count_magic users =
  - : string option = Some "Jaina"
 [*----------------------------------------------------------------------------*)
 
-let specialisation_years specialisation =
-  match specialisation with 
-  | Historian -> 3
-  | Teacher -> 5
-  | Researcher -> 4
-
 let rec find_candidate magic specialisastion wizard_list = 
-  match wizard_list with
-  | [] -> None
-  | x :: xs -> 
-    if x.status = Newbie || x.status = Employed(_,_) then
-      find_candidate magic specialisation xs
-    else if x.status = Student(magic, (specialisation_years specialisatoin))
-      x.name
+  let year =
+    match specialisation with
+    | Historian -> 3
+    | Researcher -> 4
+    | Teacher -> 5
+  in
+  let rec search = function
+    | [] -> None
+    | {name, status} :: wizards ->
+      match status with
+      | Student(m, y) when m = magic && y >= years -> Some name
+      | _ -> search wizards
+  in 
+  search wizard_list
