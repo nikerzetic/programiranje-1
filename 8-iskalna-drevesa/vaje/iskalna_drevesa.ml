@@ -173,14 +173,23 @@ let rec member2 n = function
  - : int option = None
 [*----------------------------------------------------------------------------*)
 
+let rec tree_min = function
+    | Empty -> None
+    | Node(Empty, x, _) -> Some x
+    | Node(l, x, _) -> tree_min l
+
+let rec tree_max = function
+    | Empty -> None
+    | Node(_, x, Empty) -> Some x
+    | Node(_, x, r) -> tree_max r
+
 let rec succ = function
     | Empty -> None
-    | Node(_, x, r) -> Some (min(list_of_tree r))
+    | Node(_, x, r) -> tree_min r
 
-(* let rec pred = function
+let rec pred = function
     | Empty -> None
-    | Node(Empty, x, Empty) -> Some x
-    | Node(l, x, _) -> succ l *)
+    | Node(l, x, _) -> tree_max l
 
 (*----------------------------------------------------------------------------*]
  Na predavanjih ste omenili dva načina brisanja elementov iz drevesa. Prvi 
@@ -195,6 +204,26 @@ let rec succ = function
  Node (Node (Empty, 6, Empty), 11, Empty))
 [*----------------------------------------------------------------------------*)
 
+let rec remove_end n = function
+    | Empty -> Empty
+    | Node(_, x, _) when x = n -> Empty
+    | Node(l, x, r) -> Node((remove_end n l), x, (remove_end n r))
+
+let rec delete x bst =
+    match bst with
+    | Empty -> Empty
+    | Node(Empty, y, Empty) when x = y -> Empty
+    | Node(Empty, y, r) when x = y -> r
+    | Node(l, y, Empty) when x = y -> l
+    | Node(l, y, r) when x <> y ->  
+        if x > y then
+            Node(l, y, delete x r)
+        else
+            Node(delete x l, y, r)
+    | Node(l, y, r) -> 
+        match succ bst with
+        | None -> failwith "HOW IS THIS EVEN POSSIBLE?!?"
+        | Some z -> Node(l, z, delete z r)
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
  SLOVARJI
@@ -207,6 +236,7 @@ let rec succ = function
  vrednosti, ga parametriziramo kot [('key, 'value) dict].
 [*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*)
 
+type ('key, 'value) dict = ('key * 'value) tree 
 
 (*----------------------------------------------------------------------------*]
  Napišite testni primer [test_dict]:
@@ -217,6 +247,10 @@ let rec succ = function
      "c":-2
 [*----------------------------------------------------------------------------*)
 
+let test_dict = 
+    let left_dict = (leaf ("a", 0)) in
+    let right_dict = Node((leaf ("c", (-2))), ("d", 2), Empty) in
+    Node(left_dict, ("b", 1), right_dict)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [dict_get key dict] v slovarju poišče vrednost z ključem [key]. Ker
@@ -228,7 +262,13 @@ let rec succ = function
  - : int option = Some (-2)
 [*----------------------------------------------------------------------------*)
 
-      
+let rec dict_get key dict =
+    match dict with
+    | Empty -> None
+    | Node(_, (k, x), _) when k = key -> Some x
+    | Node(l, (k, x), _) when k > key -> dict_get key l
+    | Node(_, _, r) -> dict_get key r
+
 (*----------------------------------------------------------------------------*]
  Funkcija [print_dict] sprejme slovar s ključi tipa [string] in vrednostmi tipa
  [int] in v pravilnem vrstnem redu izpiše vrstice "ključ : vrednost" za vsa
@@ -245,6 +285,10 @@ let rec succ = function
  - : unit = ()
 [*----------------------------------------------------------------------------*)
 
+let rec print_dict = function
+    | Empty ->
+    | Node(l, (key, x), r) -> (print_string key ^ " : " print_int x)  
+    (* Uporabi pretvorbo v slovar *)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [dict_insert key value dict] v slovar [dict] pod ključ [key] vstavi
