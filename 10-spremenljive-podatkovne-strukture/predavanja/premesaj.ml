@@ -32,11 +32,11 @@ let prikazi_odstopanja tabela =
   print_newline ()
 
 let premesaj_na_mestu tabela =  
-  let n = Array.length tabela in
-  for i = 1 to (n - 1) do
-    let j = Random.int (n - i + 1) in
-    zamenjaj tabela i j
-  done
+    let n = Array.length tabela in
+    for i = 1 to (n - 1) do
+      let j = Random.int (n - i + 1) in
+      zamenjaj tabela i j
+    done
 
 let vrni_premesano tabela =
   let kopija = Array.copy tabela in
