@@ -27,7 +27,22 @@
 #     [10, 2, 0, 4, 11, 15, 17, 5, 18]
 ##############################################################################
 
-
+def pivot(a, start, end):
+    pivot = a[start]
+    stored = start + 1
+    i = stored
+    while i <= end:
+        if a[i] < pivot:
+            a[stored], a[i] = a[i], a[stored]
+            stored += 1
+        i += 1
+    a[start], a[stored-1] = a[stored-1], pivot
+    return a.index(pivot)
+    
+def test1():
+    a = [10, 4, 5, 15, 11, 2, 17, 0, 18]
+    print(a)
+    print(pivot(a, 1, 7), '\n', a)
 
 ##############################################################################
 # Tabelo a želimo urediti z algoritmom hitrega urejanja (quicksort).
@@ -43,7 +58,21 @@
 #   [2, 3, 4, 5, 10, 11, 15, 17, 18]
 ##############################################################################
 
+def quicksort(a):
 
+    def quicksort_part(start, end):
+        p = pivot(a, start, end)
+        if end-start < 1:
+            return
+        quicksort_part(start, p-1), quicksort_part(p+1, end)
+
+    quicksort_part(0, len(a)-1)
+    return a
+
+def test2():
+    a = [10, 4, 5, 15, 11, 3, 17, 2, 18]
+    print(a)
+    print(quicksort(a))
 
 ##############################################################################
 # V tabeli želimo poiskati vrednost k-tega elementa po velikosti.
@@ -59,3 +88,20 @@
 # element po velikosti. Funkcija sme spremeniti tabelo [a]. Cilj naloge je, da
 # jo rešite brez da v celoti uredite tabelo [a].
 ##############################################################################
+
+def kth_element(a, k):
+    
+    def aux(start, stop):
+        l = pivot(a, start, stop) 
+        if k == l:
+            return a[l]
+        elif k < l:
+            return aux(start, l-1)
+        else:
+            return aux(l+1, stop)
+
+    return aux(0, len(a)-1)
+
+def test3():
+    a = [10, 4, 5, 15, 11, 3, 17, 2, 18]
+    print(kth_element(a, 3))
