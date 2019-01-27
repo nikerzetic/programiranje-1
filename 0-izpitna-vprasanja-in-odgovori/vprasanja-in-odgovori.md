@@ -41,10 +41,9 @@
 
 - map: uporabi funkcijo na danem seznamu; v svoji osnovi je enaka funkciji fold_right
 - fold_right: 
-    let rec zlozi_desno f xs z = match xs with
-    | [] -> z
-    | x :: xs -> f x (zlozi_desno f xs z)
-- fold_left: 
+    let rec zlozi_desno f lst z = match lst with [] -> z | x :: xs -> f x (zlozi_desno f xs z)
+- fold_left: ¸
+    let rec zlozi_levo f z lst = match lst with [] -> z | x :: xs -> zlozi_levo f (f z x) xs
 
 ### Bonus
 
